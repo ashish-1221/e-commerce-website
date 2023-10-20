@@ -1,0 +1,3 @@
+.venv/
+.vscode/
+install_httpie.sh
