@@ -60,7 +60,6 @@ class Customer(models.Model):
 
 
 ## Order Model
-
 class Order(models.Model):
     customer = models.ForeignKey(Customer,on_delete=models.CASCADE)
     order_time = models.DateTimeField(auto_now_add=True)
@@ -69,7 +68,6 @@ class Order(models.Model):
         return '%s' % (self.order_time)
 
 ## Order Items Model
-
 class OrderItems(models.Model):
     order = models.ForeignKey(Order,on_delete=models.CASCADE,related_name="order_items")
     product = models.ForeignKey(Product,on_delete=models.CASCADE)
@@ -77,4 +75,28 @@ class OrderItems(models.Model):
     def __str__(self):
         return self.product.title
 
-## 
+## Customer Address Model
+class CustomerAddress(models.Model):
+    customer = models.ForeignKey(Customer,on_delete=models.CASCADE,related_name="customer_addresses")
+    address = models.TextField()
+    default_address  = models.BooleanField(default=False)
+    def __str__(self):
+        return self.address
+
+
+## Product Rating and Reviews 
+class ProductRating(models.Model):
+    """
+        User must be logged in
+        1. Customer from the Customer Model; Customer who is viewing through his page
+    """
+    customer = models.ForeignKey(Customer,on_delete=models.CASCADE,related_name="rating_customers")
+    # produc the customer is viewing
+    product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name="rating_products")
+    # rating will vary between 1 to 5
+    rating = models.IntegerField()
+    reviews = models.TextField()
+    add_time = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f'{self.rating}-{self.reviews}'
